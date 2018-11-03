@@ -21,7 +21,7 @@ class BoggleBoard {
         if (arrFoundWords.length === 0) {
             console.log(`No word found`);
         } else {
-            console.log(`${arrFoundWords.length} word found:`);
+            console.log(`${arrFoundWords.length} word(s) found:`);
             console.log(arrFoundWords.join('\n'));
         }
     }
@@ -50,15 +50,10 @@ class BoggleBoard {
         while(findFirstChar.length > 0) {
             let duplicate = JSON.parse(JSON.stringify(this.board));
             let arrWord = dict.split('');
-            
-            // console.log(arrWord);
+                        
             let found = this.checkAround(findFirstChar[0][0], findFirstChar[0][1], duplicate, arrWord);
-            // console.log(`masuk sini: ${findFirstChar[0][0]}, ${findFirstChar[0][1]}, ${duplicate}, ${arrWord}`); 
-            // console.log(`masuk sini2: ${this.checkAround(findFirstChar[0][0], findFirstChar[0][1], duplicate, arrWord)}`); 
-            // console.log(`masuk sini2: ${found}`); 
-            if (found) {
-                
-                // console.log(`The word ${this.dict} is found`)                    
+
+            if (found) {                   
                 return true;
             } else {
                 findFirstChar.shift();
@@ -73,7 +68,6 @@ class BoggleBoard {
         }
 
         if (board[x][y] === searchWord[0] && searchWord.length > 1) {
-            // console.log(`char pertama '${searchWord[0]}' ketemu di [${x}, ${y}]`);
             board[x][y] = ' '
             searchWord.shift();
         }
@@ -82,26 +76,17 @@ class BoggleBoard {
             board[x][y] = ' '
             return true;
         }
-        
-        // console.log(board);
+                
         let xStart = (x - 1) < 0 ? 0 : x - 1;
         let xEnd = (x + 1) > this.board.length-1 ? this.board.length-1 : x + 1;
         let yStart = (y - 1) < 0 ? 0 : y - 1;
         let yEnd = (y + 1) > this.board.length-1 ? this.board.length-1 : y + 1;
 
-//         console.log(`xStart: ${xStart},
-// xEnd: ${xEnd},
-// yStart: ${yStart},
-// yEnd: ${yEnd}`);
+        // loop dengan batas baru
         for (let i = xStart; i <= xEnd; i++) {
-            for (let j = yStart; j <= yEnd; j++) {
-                // console.log(`[i, j] = [${i}, ${j}]`, board[i][j], searchWord[0]);
+            for (let j = yStart; j <= yEnd; j++) {    
+                // recursive            
                 if (searchWord[0] === board[i][j]) {
-                    // board[i][j] = ' ';
-                    // searchWord.shift();
-                    // console.log(`===========board sekarang===========`);
-                    // console.log(`karakter ${searchWord[0]} ketemu di board [${i}, ${j}], kata sekarang ${searchWord}`);
-                    // console.log(board);
                     return this.checkAround(i, j, board, searchWord);
                 }
             }
@@ -131,20 +116,9 @@ const dummyBoard = [
     ['X', 'P', 'P', 'N']
 ];
 // const dictionary = require('./data.js');
-// const dictionary = ['APPLE', 'SIT', 'TRIP', 'TURN', 'SUPER'];
+
 const dictionary = ['APPLE', 'SEAT', 'PANTEA'];
 
-var play = new BoggleBoard(4, dummyBoard, dictionary);
-// console.log(play.findWords());
-// let findFirstChar = play.findChar(dummyBoard.length, dummyBoard.length, dictionary[1][0]);
-// let arrWord = dictionary[1].split('');
-// // console.log(arrWord);
-// console.log(`First char found on`, findFirstChar);
-// console.log(play.checkAround(findFirstChar[0][0], findFirstChar[0][1], dummyBoard, arrWord));
+const play = new BoggleBoard(4, dummyBoard, dictionary);
 
 play.shake();
-
-// console.log('RANDOM BOARD');
-// console.log(play.randomBoard(4));
-// console.log('RANDOM BOARD');
-// console.log(play.randomBoard(7));
