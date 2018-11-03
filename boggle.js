@@ -1,12 +1,14 @@
+const data = require('./data.js')
+
 class Boggle {
     constructor (dimention) {
         this.dimention = dimention
     }
 
 
-    board () {
+    shake (n) {
         let randomWord = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        let dimention = this.dimention
+        let dimention = this.dimention || n
         let myBoard = []
         // create new random board with dinamic dimention
 
@@ -22,20 +24,22 @@ class Boggle {
         return myBoard
     }
 
-    findWord () {
-        let myBoard = this.board ()
+    solve (board) {
+        let myBoard = this.shake ()
         let findedWord = []
 
-        let findTheseWord = [
-            'APEL',
-            'APUS',
-            'BETE',
-            'ABRI',
-            'PAPA'
-        ]
+        let findTheseWord = data
 
         // For Dummies board, 
-       
+        
+        // let findTheseWord = [
+        //     'APEL',
+        //     'APUS',
+        //     'BETE',
+        //     'ABRI',
+        //     'PAPA'
+        // ]
+
         // myBoard = [
         //     ['A','P','U','S','M'],
         //     ['E','S','E','B','N'],
@@ -211,10 +215,8 @@ class Boggle {
 
 
 
-let game = new Boggle(5) 
+let boggle = new Boggle(5) 
 
-// while (game.findWord()==0) {
-//     game.findWord()
-// }
-game.findWord()
+
+boggle.solve()
 
