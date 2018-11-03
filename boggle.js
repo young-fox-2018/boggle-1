@@ -1,12 +1,15 @@
 class BoggleBoard {
-    constructor(num, board, dict){
-        this.number = num;
-        this.board = board;
+    constructor(dict){
+        this.number = 0;
+        this.board = [];
         this.dict = dict;
         this.duplicateBoard = [];
     }
 
-    shake() {
+    shake(num) {
+
+        this.number = num;
+        this.board = this.randomBoard(num);
         // random board plus hasilnya langsung
         var arrFoundWords = [];
 
@@ -115,10 +118,10 @@ const dummyBoard = [
     ['Y', 'L', 'A', 'T'],
     ['X', 'P', 'P', 'N']
 ];
-// const dictionary = require('./data.js');
+const dictionary = require('./data.js');
 
-const dictionary = ['APPLE', 'SEAT', 'PANTEA'];
+// const dictionary = ['APPLE', 'SEAT', 'PANTEA'];
 
-const play = new BoggleBoard(4, dummyBoard, dictionary);
+const play = new BoggleBoard(dictionary);
 
-play.shake();
+play.shake(4);
