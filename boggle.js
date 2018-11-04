@@ -1,16 +1,15 @@
 class BoggleBoard {
-    constructor(dummy, dict){
-        this.number = 0;
+    constructor(dummy, dict){        
         this.board = dummy;
         this.dict = dict;
         this.duplicateBoard = [];
     }
 
     shake(num) {
-
-        this.number = num;
+        
+        // un-comment line below if want to use random board instead of dummy
         // this.board = this.randomBoard(num);
-        // random board plus hasilnya langsung
+        
         var arrFoundWords = [];
 
         for (let i = 0; i < this.dict.length; i++) {
