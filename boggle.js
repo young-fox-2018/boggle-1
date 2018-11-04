@@ -1,11 +1,13 @@
 "use strict"
 
+const dictionary = require('./data.js');
+
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 const dummyDict = ["GET", "JOB", "BETA", "ZEBRA"]
 const dummyBoard = [
-    ["A","P","D","E"],
-    ["L","O","M","O"],
-    ["A","O","B","I"],
+    ["A","E","D","E"],
+    ["L","O","O","P"],
+    ["H","O","B","I"],
     ["H","T","E","L"]
 ]
 
@@ -14,6 +16,7 @@ class Boggle {
     constructor(boardSize){
         this.board = this.generateBoard(boardSize);
         this.posHistory = [];
+        this.foundWord = [];
     }
 
     //done
@@ -40,266 +43,80 @@ class Boggle {
 
     solve(){
         for (let i = 0 ; i < this.dictionary.length; i++){
-            this.solve(this.dictionary[i])
+            if(this.perWords(this.dictionary[i])){
+                this.foundWord.push(this.dictionary[i])
+            }
         }
 
     }
 
     perWords(word){
-        
-        for(let i = 0 ; i < word.length-1; i++ ){
-            //cari posisi sekarang
-            let found = false;
-            for(let k = 0; k < this.board.length; k++){
-                for(let l = 0; l < this.board[k].length; l++){
-                    if(word[i] === this.board[k][l] && radiuscheck(k , l, word[i+1])){
-                        let cont = {
-                            y: k,
-                            x: l,
-                            value: word[i],
-                        }
-                        k = 
-                        this.posHistory.push(cont)
-                        this.board[k][l] = " "
-                        found = true;
-                        break;
-                    }
-                }
-                if(found == true){
-                    break
+        var firstCharPos = [];
+
+        for(let i = 0; i < this.board.length; i++){
+            for(let j = 0; j < this.board.length; j++){
+                if(word[0] === this.board[i][j]){
+                    firstCharPos.push([i,j]);
                 }
             }
         }
         
+        while(firstCharPos.length > 0){
+            let duplBoard = JSON.parse(JSON.stringify(this.board));
+            let splittedWord = word.split("");
+
+            let found = this.radiuscheck(firstCharPos[0][0], firstCharPos[0][1], duplBoard, splittedWord)
+            if(found){
+                return true;
+            }
+            else{
+                firstCharPos.shift();
+            }
+        }
+        return false;
     }
     
-    radiuscheck(row, col, searchedLetter){
-        let result = false;
+    radiuscheck(row, col, board, searchedWord){
         
-        //if currentPos in the bottom right of the board
-        if(this.board[row+1] === undefined && this.board[row][col+ 1] === undefined  ){
-            //kiri
-            if(this.board[row][col - 1] == searchedLetter){
-                result = true;
-            }
-            //atas
-            else if(this.board[row - 1][col] == searchedLetter){
-                result = true;
-            }
-            // kiri atas
-            else if(this.board[row - 1][col-1] == searchedLetter){
-                result = true;
-            }
+        if(board[row][col] !== searchedWord[0]){
+            return false;
         }
-        //if currentPos in the bottom left of the board
-        else if(this.board[row+1] === undefined && this.board[row][col-1] === undefined ){
-            // kanan
-            if(this.board[row][col + 1] == searchedLetter){
-                result = true;
-            }
-            //atas
-            else if(this.board[row - 1][col] == searchedLetter){
-                result = true;
-            }
-            // kanan atas
-            else if(this.board[row - 1][col+1] == searchedLetter){
-                result = true;
-            }
+        if(board[row][col] == searchedWord[0] && searchedWord.length >1){
+            board[row][col] = " ";
+            searchedWord.shift();
         }
-        //if currentPos in the top left of the board
-        else if(this.board[row-1] === undefined && this.board[row][col-1] === undefined  ){
-            // kanan
-            if(this.board[row][col + 1] == searchedLetter){
-                result = true;
-            }
-            //bawah
-            else if(this.board[row + 1][col] == searchedLetter){
-                result = true;
-            }
-            //kanan bawah
-            else if(this.board[row + 1][col+1] == searchedLetter){
-                result = true;
-            }
-        }
-        //if currentPos in the top right of the board
-        else if(this.board[row-1] === undefined && this.board[row][col+1] === undefined){
-            //kiri
-            if(this.board[row][col - 1] == searchedLetter){
-                result = true;
-            }
-            //bawah
-            else if(this.board[row + 1][col] == searchedLetter){
-                result = true;
-            }
-            // kiri bawah
-            else if(this.board[row + 1][col-1] == searchedLetter){
-                result = true;
-            }
-        }
-        //if current position on most right
-        else if(this.board[row][col+1] === undefined){
-            
-            //kiri
-            if(this.board[row][col - 1] == searchedLetter){
-                result = true;
-            }
-            //bawah
-            else if(this.board[row + 1][col] == searchedLetter){
-                result = true;
-            }
-            //atas
-            else if(this.board[row - 1][col] == searchedLetter){
-                result = true;
-            }
-            // kiri bawah
-            else if(this.board[row + 1][col-1] == searchedLetter){
-                result = true;
-            }
-            // kiri atas
-            else if(this.board[row - 1][col-1] == searchedLetter){
-                result = true;
-            }
-        }
-        //if currentPos on most left of board
-        else if(this.board[col][row-1] === undefined){
-            // kanan
-            if(this.board[row][col + 1] == searchedLetter){
-                result = true;
-            }
-            //bawah
-            else if(this.board[row + 1][col] == searchedLetter){
-                result = true;
-            }
-            //atas
-            else if(this.board[row - 1][col] == searchedLetter){
-                result = true;
-            }
-            //kanan bawah
-            else if(this.board[row + 1][col+1] == searchedLetter){
-                result = true;
-            }
-            // kanan atas
-            else if(this.board[row - 1][col+1] == searchedLetter){
-                result = true;
-            }
-        }
-        //if currentPos in bottom side of the board
-        else if(this.board[row+1][col] === undefined){
-            // kanan
-            if(this.board[row][col + 1] == searchedLetter){
-                result = true;
-            }
-            //kiri
-            else if(this.board[row][col - 1] == searchedLetter){
-                result = true;
-            }
-            //atas
-            else if(this.board[row - 1][col] == searchedLetter){
-                result = true;
-            }
-            // kiri atas
-            else if(this.board[row - 1][col-1] == searchedLetter){
-                result = true;
-            }
-            // kanan atas
-            else if(this.board[row - 1][col+1] == searchedLetter){
-                result = true;
-            }
-        }
-        //if currentPos in the top side of the board
-        else if(this.board[row-1][col] === undefined){
-            // kanan
-            if(this.board[row][col + 1] == searchedLetter){
-                result = true;
-            }
-            //kiri
-            else if(this.board[row][col - 1] == searchedLetter){
-                result = true;
-            }
-            //bawah
-            else if(this.board[row + 1][col] == searchedLetter){
-                result = true;
-            }
-            //kanan bawah
-            else if(this.board[row + 1][col+1] == searchedLetter){
-                result = true;
-            }
-            // kiri bawah
-            else if(this.board[row + 1][col-1] == searchedLetter){
-                result = true;
-            }
-
-        }
-        //if currentPos in the middle of the board
-        else{
-            // kanan
-            if(this.board[row][col + 1] == searchedLetter){
-                result = true;
-            }
-            //kiri
-            else if(this.board[row][col - 1] == searchedLetter){
-                result = true;
-            }
-            //bawah
-            else if(this.board[row + 1][col] == searchedLetter){
-                result = true;
-            }
-            //atas
-            else if(this.board[row - 1][col] == searchedLetter){
-                result = true;
-            }
-            //kanan bawah
-            else if(this.board[row + 1][col+1] == searchedLetter){
-                result = true;
-            }
-            // kiri bawah
-            else if(this.board[row + 1][col-1] == searchedLetter){
-                result = true;
-            }
-            // kiri atas
-            else if(this.board[row - 1][col-1] == searchedLetter){
-                result = true;
-            }
-            // kanan atas
-            else if(this.board[row - 1][col+1] == searchedLetter){
-                result = true;
-            }
+        if(board[row][col] == searchedWord[0] && searchedWord.length ==1){
+            board[row][col] = " ";
+            return true
         }
 
-        return result
+        let startingRow = (row-1) < 0 ? 0 : row - 1;
+        let endingRow = (row+1) > board.length-1 ? board.length-1 : row +1;
+        let startingCol = (col-1) < 0 ? 0 : col - 1;
+        let endingCol = (col+1) > board.length-1 ? board[0].length-1 : col +1;
+
+
+        let found
+        for (let i = startingRow; i <= endingRow; i++){
+            for(let j = startingCol; j <= endingCol; j++){
+                if(searchedWord[0] === board[i][j]){
+                    found = false || this.radiuscheck(i, j, board, searchedWord)
+                }
+            }
+        }
+        return found;
     }
 
     
-
-    //done
-    // search(letter, theBoard){
-
-    //     this.wordsMap[letter] = []
-        
-    //     for (let i = 0 ; i < theBoard.length; i++){
-    //         for (let j = 0; j < theBoard[i].length; j++){
-    //             if(letter == theBoard[i][j]){
-    //                 let cont = [i,j]
-    //                 this.wordsMap[letter].push(cont)
-    //             }
-    //         }
-    //     }
-    //     return this.wordsMap[letter]
-    // }
-
 
 
 }
 
 let game = new Boggle(4)
 
-game.dictionary = ["APP"]
-game.board = dummyBoard;
+game.dictionary = dictionary;
 
-// game.solve()
-console.log(game.radiuscheck(1,3,"E"))
-
-console.log(game)
-// console.log(game.search("A",game.board))
-
+game.solve()
+console.log(game.board)
+console.log(game.foundWord)
 
