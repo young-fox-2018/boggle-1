@@ -2,14 +2,21 @@ const data = require("./data.js")
 
 class Boggle {
     constructor(data) {
-        this.board = this.shake()
+        this.board = [
+            ["T","A","C","D"],
+            ["N","M","G","R"],
+            ["A","J","K","E"],
+            ["M","N","O","P"]
+        ]
+        // change array to this.shake to make a randomize board
         this.visited_board = [ // false means not yet visited
             [false,false,false,false],
             [false,false,false,false],
             [false,false,false,false],
             [false,false,false,false]
         ]
-        this.words = data    
+        this.words = ["ANTMAN", "MANTA", "JOKER", "KOKO", "NOPE"] 
+        // change this.word to data to iter word in comparison 
     } 
     
     shake() { // release 0
@@ -45,12 +52,18 @@ class Boggle {
     }
     // this function check whether a single word input does exist in a boggle board
 
+    recursive() {
+        
+    }
+
     findOne(board, word) {
         let original_word = word
+        let original_visited = JSON.parse(JSON.stringify(this.visited_board)) // masih error 
+        let visited = null
         for (let row = 0; row < board.length; row++) {
             for (let col = 0; col < board[row].length; col++) {
-                let visited = this.visited_board
-                if (word[0] == board[row][col]) {
+                visited = original_visited
+                if (word[0] == board[row][col]) { // we get the first word here
                     var x = row; var y = col 
                     while (word.length > 0) {
                         let index = null
@@ -60,16 +73,17 @@ class Boggle {
                             index = 1
                         }
                         let temp = this.surround(x, y, word[index], visited)
-                        //console.log(temp)
-                         // [ true, [ { row: 3, col: 2, value: 'O' } ] ] <-- hasil dari surround
+                        //[ true, [ { row: 3, col: 2, value: 'O' } ] ] <-- hasil dari surround
+
                          if (temp[0] == true) {
-                            visited[x][y] = true
-                            x = temp[1][0].row
-                            y = temp[1][0].col
-                            word = word.slice(1)
-                            if (word.length == 1) {
-                                return true // ud pasti ketemu 
-                            }
+                                visited[x][y] = true
+                                x = temp[1][0].row
+                                y = temp[1][0].col
+                                word = word.slice(1)
+                                if (word.length == 1) {
+                                    return true // ud pasti ketemu 
+                                }       
+                            
                         } else {
                             break
                         }  
@@ -96,30 +110,19 @@ class Boggle {
         }
     }
 }
-// let test = [[false,false,false,false],
-//             [false,false,false,false],
-//             [false,false,false,false],
-//             [false,false,false,false]]
 
 
 // test board
+// let board = [["T","A","C","D"],
+//             ["N","M","G","R"],
+//             ["A","J","K","E"],
+//             ["M","N","O","P"]]
 
-// let board = [
-//     ["T","A","C","D"],
-//     ["N","M","G","R"],
-//     ["A","J","K","E"],
-//     ["M","N","O","P"]
-// ]
 
 // ["ANTMAN", "MANTA", "JOKER", "KOKO", "NOPE"]  
 let game = new Boggle(data)
-game.solve()
-
 //console.log(game.findOne(board, "MANTA"))
-
-
-//game.solve()
-//console.log(game.solve())
-
+game.solve()
+//console.log(game.findOne(board, "MANTA"))
 
 
