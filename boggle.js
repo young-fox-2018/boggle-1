@@ -1,5 +1,4 @@
 class BoggleBoard{
-
     constructor(grid){
         this.diction = // data
         [
@@ -7,6 +6,8 @@ class BoggleBoard{
             "SIP",
             "MELON",
             "PUSH",
+            "NUT",
+            "NUTS",
             "PUTS",
             "KEY"
         ] 
@@ -20,7 +21,6 @@ class BoggleBoard{
         ] 
         this.board = this.dummyBoard //this.shake(grid)
     }
-
     shake(grid){
         let res = []
         let arr = []
@@ -35,15 +35,12 @@ class BoggleBoard{
         }
         return res
     }
-
-
     // MAIN function
     arrDictLetters(){
     let diction = this.diction
     let wordRes = []
-
         while(diction.length > 0){
-            if(this.solve(diction[0])){
+            if(this.solve(diction)){
                 wordRes.push(diction[0])
             }
             diction.shift()
@@ -52,21 +49,20 @@ class BoggleBoard{
     }
     
     solve(word){
-        let coor = this.check1stLetter(word[0])
-        // console.log(word, "ini word yang di solve")
-
-        if(coor.length === 0){
+        let coorWord = this.check1stLetter(word[0])
+        // console.log(word, "ini word yang di solve", coorWord ,"koordinat letter dari word")
+        if(coorWord.length === 0){
             return false
         }
         else{
-            while(this.checkAroundLetter(word, coor[0][0],coor[0][1])){
-                coor.shift()
-                if(coor.length < 1){
+            while(this.checkAroundLetter(word, coorWord[0][0],coorWord[0][1])){
+                coorWord.shift()
+                if(coorWord.length < 1){
                     break
                 }
             }
             
-            if(coor.length < 1){
+            if(coorWord.length < 1){
                 return false
             }else{
                 return true
@@ -77,7 +73,6 @@ class BoggleBoard{
     check1stLetter(letter){
         let firstLetterPost = []
         let board = this.board
-
         for(let row = 0 ; row < board.length ; row++){
             for(let col = 0 ; col < board[row].length ; col++){
                 if(board[row][col] === letter[0]){
@@ -87,22 +82,19 @@ class BoggleBoard{
         }
         return firstLetterPost
     }
-
-
+    
     checkAroundLetter(word, bRow, bCol){
         let board = this.board
         const checkBox = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
-
         if(checkBox.length < 1){
-            return true
+            return false
         }
         else{
-            for(let iLetter = 0; iLetter < word.length ; iLetter++){
+            for(let iLetter = 0; iLetter < word[0].length ; iLetter++){
                 for(let iCheck = 0 ; iCheck < checkBox.length ; iCheck++){
                     let coorX = bRow + checkBox[iCheck][0]
                     let coorY = bCol + checkBox[iCheck][1]
-                    if(coorX !== undefined && coorY !== undefined && board[bRow][bCol] === word[1]){
-                        board[bRow][bCol] = "*"
+                    if(coorX !== undefined && coorY !== undefined && coorX < board.length && coorY < board.length && board[coorX][coorY] === word[0][iLetter]){
                         break
                     }
                 }
@@ -111,9 +103,9 @@ class BoggleBoard{
     }
 
 }
-
 const data = require('./data.js')
-const Boggle = new BoggleBoard()
+const Boggle = new BoggleBoard(4)
 
-console.log("HERE IS THE GAME BOARD WE'VE RANDOMIZED FOR YOU\n", Boggle.board)
-console.log(Boggle.arrDictLetters())
+// console.log("HERE IS THE GAME BOARD WE'VE RANDOMIZED FOR YOU\n", Boggle.board) //Using Shake
+console.log("HERE IS THE GAME BOARD WE'VE RANDOMIZED FOR YOU\n", Boggle.dummyBoard)
+console.log(Boggle.arrDictLetters()) 
