@@ -9,16 +9,23 @@ class Boggle {
 
     createBoard() {
         let a = [1,2,3]
-   
-        for ( let i = 0; i < this.size; i++) {
-            let innerBoard = []
+        let b =         JSON.parse(JSON.stringify(a))
+        // for ( let i = 0; i < this.size; i++) {
+        //     let innerBoard = []
 
-            for ( let j = 0; j < this.size; j++) {
-                innerBoard[j] = this.randomizeAlphabet()
-            }
+        //     for ( let j = 0; j < this.size; j++) {
+        //         innerBoard[j] = this.randomizeAlphabet()
+        //     }
 
-            this.board.push(innerBoard)
-        }
+        //     this.board.push(innerBoard)
+        // }
+
+        this.board = [
+            ['T', 'R', 'S', 'T'],
+            ['A', 'O', 'A', 'L'],
+            ['G', 'R', 'O', 'Z'],
+            ['C', 'B', 'A', 'G'],
+        ];
     }
 
     solve() {
@@ -27,27 +34,36 @@ class Boggle {
         let d = {}
         let foundAlphabet = false
         let foundWords = []
+        let notFound = false
 
         while (wordPos < this.searchWord.length) {
-           
             let useBoard = JSON.parse(JSON.stringify(this.board))
-      
             for (let i = 0; i < this.searchWord[wordPos].length; i++) {
                 for (let y = 0; y < useBoard.length; y++) {
                     for (let x = 0; x < useBoard[y].length; x++) {
+                       obj = {}
+
                        if (useBoard[y][x] === this.searchWord[wordPos].charAt(i) && this.charFound.length === 0) {                       
                             obj.row = y
                             obj.column = x
                             obj.value = useBoard[y][x]
+                            obj.charPos = i
+                            this.charFound.push(obj)  
                             useBoard[y][x] = "temp"
-                            this.charFound.push(obj)                
-                           
                             y = 0
                             x = 0
 
                             foundAlphabet = true
                             break
-                        } else if (useBoard[y][x] === this.searchWord[wordPos].charAt(i)) {
+                        } else if (useBoard[y][x] === this.searchWord[wordPos].charAt(i)) {                        
+                            console.log(y, "row")
+                            console.log(x, "column")
+                            console.log(useBoard[y][x], "YG MASUK")
+
+                            console.log(this.charFound[this.charFound.length - 1].row, " SAVED row")
+                            console.log(this.charFound[this.charFound.length - 1].column, "SAVED column")
+                            console.log(useBoard[y][x], "YG ADA DI DALEM<---")
+                            
                             if ((
                                 this.checkTop(y, x) ||
                                 this.checkNorthEast(y , x, useBoard) ||
@@ -62,36 +78,55 @@ class Boggle {
                                 obj.column = x
                                 obj.charPos = i
                                 obj.value = useBoard[y][x]
+                                
                                 useBoard[y][x] = "temp"
+                    
                                 this.charFound.push(obj)
-
+                              
+                                console.log(x, "LJ")
+                          
+                                console.log(this.charFound)
                                 y = 0
                                 x = 0
 
                                 foundAlphabet = true
                                 break
-                            } else {
-                                useBoard[this.charFound[this.charFound.length - 1].row][this.charFound[this.charFound.length - 1].column] = 'visited'                               
-                                this.charFound.pop()
-                          
+                            } else if (y === useBoard.length - 1 && x === useBoard[y].length - 1) {
+                                useBoard[this.charFound[this.charFound.length - 1].row][this.charFound[this.charFound.length - 1].column] = 'visited'
+                                i = this.charFound[this.charFound.length - 1].charPos
+                                this.charFound.pop()    
+                                                                    
                                 y = 0
-                                x = 0
-
-                                if (y != this.board.length -1 && x != this.board.length - 1 && this.charFound.length != 0) {
-                                    i = this.charFound[this.charFound.length - 1].charPos
-                                    break
-                                }
+                                x = 0 
                             }
-                        }
+                        } else if (y === useBoard.length - 1 && x === useBoard[y].length - 1 && this.charFound.length > 0) {
+                            useBoard[this.charFound[this.charFound.length - 1].row][this.charFound[this.charFound.length - 1].column] = 'visited'
+                            i = this.charFound[this.charFound.length - 1].charPos
+                            this.charFound.pop()    
+                                                                
+                            y = 0
+                            x = 0 
+                        } else if (y === useBoard.length - 1 && x === useBoard[y].length - 1 && this.charFound.length == 0) {
+                            notFound = true
+                            break
+                        }   
                     }
 
                     if (foundAlphabet) {
                         foundAlphabet = false
                         break
                     }
+
+                    if (notFound) {
+                        notFound = false
+                        break
+                    }
+
                 }
             }
 
+            console.log(useBoard)
+        
             if (this.charFound.length == this.searchWord[wordPos].length) {
               foundWords.push(this.searchWord[wordPos])
             }
@@ -202,5 +237,5 @@ class Boggle {
     }
 }
 
-const boggle = new Boggle(4,["SAST"])
+const boggle = new Boggle(4,["TOROAZ","TOROAG","ASDASDAD","TRAOG"])
 boggle.solve()
