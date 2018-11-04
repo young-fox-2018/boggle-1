@@ -24,7 +24,8 @@ class Boggle{
             }
         }
 
-        console.log(this.boggleBoard);
+        console.log( this.boggleBoard )
+        
         if (found.length === 0) {
 
             console.log("word not found")
