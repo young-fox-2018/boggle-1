@@ -19,13 +19,6 @@ class Boggle {
 
         //     this.board.push(innerBoard)
         // }
-
-        this.board = [
-            ['S', 'R', 'T', 'M'],
-            ['R', 'A', 'A', 'L'],
-            ['R', 'S', 'S', 'I'],
-            ['A', 'O', 'A', 'T'],
-        ];
     }
 
     solve() {
