@@ -2,11 +2,6 @@ class Boggle {
   constructor(size){
     this.papan = []
     this.kamus = kamus
-    this.dummy = [ [ 'D', 'G', 'H', 'I' ],
-    [ 'K', 'L', 'P', 'S' ],
-    [ 'Y', 'E', 'U', 'T' ],
-    [ 'E', 'O', 'R', 'N' ] ]
-    this.kamustest = [  'APPLE' , 'SIT' , 'TRIP' , 'TURN' , 'SUPER']
     this.size = size
   }
 
@@ -16,44 +11,48 @@ class Boggle {
     let counterhuruf = 0
 
     //LOOPING SETIAP KATA DALAM KAMUS
-    for (let i = 0; i < this.kamustest.length; i++) {
+    for (let i = 0; i < this.kamus.length; i++) {
       // papan 2 biar bisa simpan kata yang udah digunain dan diganti string kosong
-      var papan2 = JSON.parse(JSON.stringify(this.dummy))
+      var papan2 = JSON.parse(JSON.stringify(this.papan)) 
+
       // buat nyimpan list dari koordinate huruf dari huruf 1 sampai habis
       let koor = []
 
       // LOOPING SETIAP HURUS DALAM KATA
-      for(let j = 0; j < this.kamustest[i].length; j++) {
-        // let cekindex1 = true
+      for ( let j = 0; j < this.kamus[i].length; j++) {
         
         // pake persyaratan j = 0 biar dia masuk kesini kalo cek huruf 1
         if (j == 0 && koor.length == 0 ) {
-          if(this.cekPertama(papan2, this.kamustest[i][j])[0] === true) {
-            koor.push(this.cekPertama(papan2, this.kamustest[i][j])[1])
+
+          if(this.cekPertama(papan2, this.kamus[i][j])[0] === true) {
+            koor.push(this.cekPertama(papan2, this.kamus[i][j])[1])
             counterhuruf++
             papan2[koor[0][0]][koor[0][1]] = ' '
           } else {
               break
           }
-        } else {
+          
+        // masuk sini kalo udah huruf 2
+        }else {
 
-            if(this.cekGrid(papan2, koor[koor.length-1], this.kamustest[i][j])[0] === true) {
-                koor.push(this.cekGrid(papan2, koor[koor.length-1], this.kamustest[i][j])[1])
-                papan2[koor[koor.length-1][0]][koor[koor.length-1][1]] = ' '
-                counterhuruf++
-            } else {
-                koor = koor.slice(0, koor.length-1)
-                j -= 2
-                counterhuruf-- 
-            }
+          if ( this.cekGrid(papan2 , koor[koor.length-1] , this.kamus[i][j])[0] === true) {
+              koor.push(this.cekGrid(papan2, koor[koor.length-1] , this.kamus[i][j])[1])
+              papan2[koor[koor.length-1][0]][koor[koor.length-1][1]] = ' '
+              counterhuruf++
+          } else {
+              koor = koor.slice(0, koor.length-1)
+              counterhuruf-- 
+              j-= 2
+          }
+
         }
       }
-      if(counterhuruf === this.kamustest[i].length) {
-        kata.push(this.kamustest[i])
+      if ( counterhuruf === this.kamus[i].length ) {
+        kata.push(this.kamus[i])
         counterhuruf = 0
       }
     }
-    console.log(this.dummy)
+    console.log(this.papan)
     console.log(`${kata.length} words found :`)
     console.log(kata.join('\n'))
   }
@@ -91,7 +90,7 @@ class Boggle {
   }
 
   //CEK SEKELILINGNYA
-  cekGrid(board, koor,kamus) {
+  cekGrid(board, koor ,kamus) {
     let istart = koor[0]-1
     let iend = koor[0]+1
     let jstart = koor[1]-1
@@ -119,7 +118,11 @@ class Boggle {
 
 }
 const kamus = require('./data.js')
-var board = new Boggle(4)
+//bisa rubah size kotak 
+const board = new Boggle(5)
+
+board.shake()
+board.solve()
 
 // manggil papannya udah bisa
 // console.log(board.shake())
@@ -127,5 +130,3 @@ var board = new Boggle(4)
 // console.log(board.kamustest)
 // manggil dummy papan
 // console.log(board.dummy)
-
-board.solve()
