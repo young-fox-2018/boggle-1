@@ -37,8 +37,7 @@ class Boggle {
 
         while (wordPos < this.searchWord.length) {
             let useBoard = JSON.parse(JSON.stringify(this.board))
-            console.log(useBoard)
-            
+      
             for (let i = 0; i < this.searchWord[wordPos].length; i++) {
                 for (let y = 0; y < useBoard.length; y++) {
                     for (let x = 0; x < useBoard[y].length; x++) {
@@ -80,8 +79,6 @@ class Boggle {
                             } else {
                                 useBoard[this.charFound[this.charFound.length - 1].row][this.charFound[this.charFound.length - 1].column] = 'visited'                               
                                 this.charFound.pop()
-                                console.log(this.charFound)
-                               
                           
                                 y = 0
                                 x = 0
