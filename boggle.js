@@ -1,24 +1,27 @@
 class Boggle {
     constructor(dim){
-        this.dimensi = dim
+        this.dimensi = dim //board dimension
         this.board = []
+        this.papan = []
         this.kata = kamus
-        this.kataAda = []
+        this.kataAda = [] //array to store words that found on board
     }
 
     generateBoardRandom(){
+        var tempboard = []
         for(let i = 0; i < this.dimensi; i++){
             let arrRow = []
             for(let j = 0; j < this.dimensi; j++){
                 let randomHuruf = Math.floor(Math.random()*26) + 65
                 arrRow.push(String.fromCharCode(randomHuruf))
             }
-            this.board.push(arrRow)
+            tempboard.push(arrRow)
         }
-        return this.board
+        return tempboard
     }
 
     generateBoardManual(){
+        var tempboard = []
         let count = 0
         for(let i = 0; i < this.dimensi; i++){
             let arrRow = []
@@ -26,32 +29,38 @@ class Boggle {
                 arrRow.push(hurufBoard[count])
                 count++
             }
-            this.board.push(arrRow)
+            tempboard.push(arrRow)
         }
-        return this.board
+        return tempboard
     }
 
     cekKamus(){
         console.log("-----------BOARD-----------")
-        console.log(this.generateBoardRandom())
+        var table = this.generateBoardRandom()
+        this.board = JSON.parse(JSON.stringify(table))
+        this.papan = JSON.parse(JSON.stringify(table))
+        console.log(this.board)
+
         // console.log("kamus yang dicari:",this.kata)
         console.log("")
 
         let i = 0
         while(i < banyakKata){
             // console.log("===TRUE/FALSE=== " + this.solve(this.kata[0]))
-            
             if(this.solve(this.kata[0]) === true){
                 this.kataAda.push(this.kata[0])
             }
             this.kata.shift()
             i += 1
+            this.board = JSON.parse(JSON.stringify(this.papan))
             
             // console.log("")
             // console.log(`kata-${i} next ${this.kata}`)
         }
+        
+        console.log("kata yang ada di board: " + this.kataAda)
+        // console.log(this.board)
         return ("jumlah kata yang ada di board: "+this.kataAda.length)
-        // return ("kata yang ada di board: " + this.kataAda)
     }
 
     solve(word){
@@ -73,6 +82,7 @@ class Boggle {
             // console.log("init:", [arr[0][0],arr[0][1],word.length])
 
             while(!this.checkGrid(arr[0][0],arr[0][1],(word.length))){
+                this.board = JSON.parse(JSON.stringify(this.papan))
                 this.deleteidxFirstLetter(arr)
                 // console.log("after delete:", arr)
                 if(arr.length <= 0){
@@ -139,6 +149,7 @@ class Boggle {
                         // console.log("update:",[i,j,count-1])
                         // console.log("arrKataAdaNow:", this.kataAda)
                         // console.log("")
+                        this.board[i][j] = " "
                         return this.checkGrid(i,j,count-1)
                     }
                 }
@@ -152,7 +163,7 @@ class Boggle {
 
 const kamus = require('./data.js')
 
-// Kamus dummies
+// ---- kamus dummies ----
 // var kamus = ['TURN']
 // var kamus = ["APPLE"]
 // var kamus = ['SIT','APPLE','SUPER','TRIP','TURN','PURE', 'SHIP']
@@ -160,6 +171,7 @@ const kamus = require('./data.js')
 var banyakKata = kamus.slice(0).length
 // console.log(banyakKata)
 
+// ---- generate board manual / just dummies ----
 var hurufBoard = 'TGHIKLPSYEUTTORN'
 
 var boggle = new Boggle(4)
