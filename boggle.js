@@ -102,13 +102,73 @@ class Boggle {
       return false;
     }
 
+    findString(str,board) {
+      let prefix = "";
+      //do looping check entire board one by one
+      for (let i = 0 ; i < board.length ; i++) {
+        for (let j = 0 ; j < board[i].length ; j++) {
+          let currentCoordinate = [i,j];
+          prefix = board[i][j];
+          this.usedCoordinate = [];
+          //run the string check in current coordinate 
+          if (this.runCheck (currentCoordinate, prefix, str, board) === true) {
+            return true;
+          }
+        }
+      }
+      //if until end of looping not return true then return false;
+      return false;
+    }
+  
+    //REKURSIF FUNCTION CHECKING IF INPUT PARAMETER PREFIX IN DICTIONARY OR NOT, IT IS LIKE BACKTRACK ALGORITHM THAT USED IN SUDOKU EXERCISE
+    runCheck (coordinate, prefixStr, str, board) {
+      let boardSize = board.length;
+      if (str.indexOf(prefixStr) === 0 && prefixStr !== str) { //check if prefix is par of string or not
+        this.usedCoordinate.push(coordinate);
+        //do check for every direction that represented by number
+        // → = 1 , ↘ = 2 , ↓ = 3, ↙ = 4 , ← = 5, ↖ = 6, ↑ = 7, ↗ = 8
+        for (let direction = 1 ; direction <=8 ; direction++) {
+          let newCoordinate = this.checkCoordinate(coordinate,direction,boardSize);
+          if (newCoordinate !== false) {
+            let row = newCoordinate[0];
+            let column = newCoordinate[1];
+            prefixStr += board[row][column];
+            //DO RECURSIVE 'runCheck' TO CHECK NEXT COORDINATE WITH INPUT UPDATED PREFIX
+            if (this.runCheck(newCoordinate, prefixStr, str, board) === true) {
+              return true;
+            } else {
+              prefixStr = prefixStr.slice(0,prefixStr.length-1); //remove last added char using slice
+            }
+          }
+        }
+        this.usedCoordinate.pop();
+      } else if (prefixStr === str) { //check condition if the string found in board
+        return true;
+      } else return false; // return false if prefix is not substring of str
+    }
+
+    //RELEASE 2 FIND ALL STRING 
+    findAllString(dictionary, board) {
+      let isFound = false;
+      for (let i = 0 ; i < dictionary.length ; i++) {
+        if (this.findString(dictionary[i],board) === true) {
+          console.log ("FOUND STRING",dictionary[i]);
+          isFound = true;
+        } 
+      }
+      if (isFound === false) {
+        console.log("NONE DICTIONARY STRING AVAILABLE IN BOARD");
+      }
+    }
+  
+
 }
 
 var game = new Boggle();
 
 //RELEASE 0 : CREATE METHOD SHAKE WITH INPUT SIZE OF BOARD AND RETURN ARRAY SIZE*SIZE WITH SUFFLED CHARACTER A-Z
 let shuffledBoard = (game.shake(4));
-console.log("RELESE 0 TEST")
+console.log("Release 0, random board")
 game.printBoard(shuffledBoard);
 console.log("")
 
@@ -118,10 +178,31 @@ let sampleBoard = [
   ['Y', 'E', 'U', 'T'],
   ['E', 'O', 'R', 'N']
 ]
-console.log("RELESE 1 TEST")
+console.log("Release 1, cek arah mata angin")
 game.printBoard(sampleBoard);
 console.log("TURN", game.findString("TURN",sampleBoard));
 console.log("SUPER",game.findString("SUPER",sampleBoard));
 console.log("APPLE",game.findString("APPLE",sampleBoard));
 console.log("PUPI",game.findString("PUPI",sampleBoard));
 console.log("")
+
+game.printBoard(sampleBoard);
+  console.log("TURN", game.findString("TURN",sampleBoard));
+  console.log("SUPER",game.findString("SUPER",sampleBoard));
+  console.log("APPLE",game.findString("APPLE",sampleBoard));
+  console.log("PUPI",game.findString("PUPI",sampleBoard));
+  console.log("")
+  
+  //RELEASE 2 TEST 
+  let sampleDictionary = ['APPLE','SIT','TRIP','TURN','SUPER'];
+  console.log("Coba dengan array kata yang di set manual")
+  game.printBoard(sampleBoard);
+  game.findAllString(sampleDictionary,sampleBoard);
+  console.log("")
+  
+  // RELEASE 2 TEST 
+  let importedDictionary = require('./data.js');
+  
+  console.log("Coba cek dengan board random dan kata di file data.js")
+  game.printBoard(shuffledBoard);
+  game.findAllString(importedDictionary.words,sampleBoard);
