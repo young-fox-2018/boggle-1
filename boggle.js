@@ -37,11 +37,10 @@ class Boggle {
     cekKamus(){
         console.log("-----------BOARD-----------")
         var table = this.generateBoardRandom()
+        // var table = this.generateBoardManual()
         this.board = JSON.parse(JSON.stringify(table))
         this.papan = JSON.parse(JSON.stringify(table))
         console.log(this.board)
-
-        // console.log("kamus yang dicari:",this.kata)
         console.log("")
 
         let i = 0
@@ -60,7 +59,7 @@ class Boggle {
         
         console.log("kata yang ada di board: " + this.kataAda)
         // console.log(this.board)
-        return ("jumlah kata yang ada di board: "+this.kataAda.length)
+        return ("\n" + "jumlah kata yang ada di board: "+this.kataAda.length)
     }
 
     solve(word){
@@ -142,7 +141,6 @@ class Boggle {
             for( let i = startX; i <= endX; i++){
                 for(let j = startY; j <= endY; j++){
                     //debug
-                    // console.log("===",this.kata[0][this.kata[0].length - count])
                     // console.log("huruf dicari:",this.kata[0][this.kata[0].length - count])
                     if(this.kata[0][this.kata[0].length - count] === this.board[i][j]){
                         // debug
@@ -156,9 +154,7 @@ class Boggle {
             }
             return false
         }
-        
     }
-
 }
 
 const kamus = require('./data.js')
@@ -166,13 +162,14 @@ const kamus = require('./data.js')
 // ---- kamus dummies ----
 // var kamus = ['TURN']
 // var kamus = ["APPLE"]
-// var kamus = ['SIT','APPLE','SUPER','TRIP','TURN','PURE', 'SHIP']
+// var kamus = ['ISI','SIT','APPLE','SUPER','TRIP','TURN','PURE', 'SHIP','YOUR','KLEORE','KLEORUS']
 
 var banyakKata = kamus.slice(0).length
 // console.log(banyakKata)
 
 // ---- generate board manual / just dummies ----
-var hurufBoard = 'TGHIKLPSYEUTTORN'
+// Uncoment below if you want to generate board manually
+// var hurufBoard = 'TGHIKLPSYEUTTORN'
 
 var boggle = new Boggle(4)
 console.log(boggle.cekKamus())
