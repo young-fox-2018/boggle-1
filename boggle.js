@@ -9,16 +9,16 @@ class Boggle {
 
     createBoard() {
         let a = [1,2,3]
-        let b =         JSON.parse(JSON.stringify(a))
-        // for ( let i = 0; i < this.size; i++) {
-        //     let innerBoard = []
+   
+        for ( let i = 0; i < this.size; i++) {
+            let innerBoard = []
 
-        //     for ( let j = 0; j < this.size; j++) {
-        //         innerBoard[j] = this.randomizeAlphabet()
-        //     }
+            for ( let j = 0; j < this.size; j++) {
+                innerBoard[j] = this.randomizeAlphabet()
+            }
 
-        //     this.board.push(innerBoard)
-        // }
+            this.board.push(innerBoard)
+        }
     }
 
     solve() {
@@ -29,6 +29,7 @@ class Boggle {
         let foundWords = []
 
         while (wordPos < this.searchWord.length) {
+           
             let useBoard = JSON.parse(JSON.stringify(this.board))
       
             for (let i = 0; i < this.searchWord[wordPos].length; i++) {
