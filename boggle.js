@@ -1,7 +1,7 @@
 class BoggleBoard {
-    constructor(dict){
+    constructor(dummy, dict){
         this.number = 0;
-        this.board = [];
+        this.board = dummy;
         this.dict = dict;
         this.duplicateBoard = [];
     }
@@ -9,7 +9,7 @@ class BoggleBoard {
     shake(num) {
 
         this.number = num;
-        this.board = this.randomBoard(num);
+        // this.board = this.randomBoard(num);
         // random board plus hasilnya langsung
         var arrFoundWords = [];
 
@@ -86,16 +86,17 @@ class BoggleBoard {
         let yEnd = (y + 1) > this.board.length-1 ? this.board.length-1 : y + 1;
 
         // loop dengan batas baru
+        let found;
         for (let i = xStart; i <= xEnd; i++) {
             for (let j = yStart; j <= yEnd; j++) {    
                 // recursive            
                 if (searchWord[0] === board[i][j]) {
-                    return this.checkAround(i, j, board, searchWord);
+                    found = false || this.checkAround(i, j, board, searchWord);
                 }
             }
         }
 
-        return false;
+        return found;
     }
 
     findChar(x, y, char){
@@ -113,15 +114,15 @@ class BoggleBoard {
 
 // shake(4);
 const dummyBoard = [
-    ['A', 'G', 'H', 'I'],
-    ['K', 'L', 'E', 'S'],
-    ['Y', 'L', 'A', 'T'],
-    ['X', 'P', 'P', 'N']
+    ['A', 'E', 'D', 'E'],
+    ['L', 'O', 'O', 'P'],
+    ['H', 'O', 'B', 'I'],
+    ['H', 'T', 'E', 'L']
 ];
-const dictionary = require('./data.js');
+// const dictionary = require('./data.js');
 
-// const dictionary = ['APPLE', 'SEAT', 'PANTEA'];
+const dictionary = ['DEPO', 'HOTEL', 'HOBE'];
 
-const play = new BoggleBoard(dictionary);
+const play = new BoggleBoard(dummyBoard, dictionary);
 
 play.shake(4);
