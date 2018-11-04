@@ -8,8 +8,6 @@ class Boggle {
     }
 
     createBoard() {
-        let a = [1,2,3]
-        let b =         JSON.parse(JSON.stringify(a))
         // for ( let i = 0; i < this.size; i++) {
         //     let innerBoard = []
 
@@ -31,13 +29,13 @@ class Boggle {
     solve() {
         let wordPos = 0
         let obj = {}
-        let d = {}
         let foundAlphabet = false
         let foundWords = []
         let notFound = false
 
         while (wordPos < this.searchWord.length) {
             let useBoard = JSON.parse(JSON.stringify(this.board))
+            console.log(useBoard)
             for (let i = 0; i < this.searchWord[wordPos].length; i++) {
                 for (let y = 0; y < useBoard.length; y++) {
                     for (let x = 0; x < useBoard[y].length; x++) {
@@ -56,16 +54,7 @@ class Boggle {
                             foundAlphabet = true
                             break
                         } else if (useBoard[y][x] === this.searchWord[wordPos].charAt(i)) {                        
-                            console.log(y, "row")
-                            console.log(x, "column")
-                            console.log(useBoard[y][x], "YG MASUK")
-
-                            console.log(this.charFound[this.charFound.length - 1].row, " SAVED row")
-                            console.log(this.charFound[this.charFound.length - 1].column, "SAVED column")
-                            console.log(useBoard[y][x], "YG ADA DI DALEM<---")
-                            
-                            if ((
-                                this.checkTop(y, x) ||
+                            if (this.checkTop(y, x) ||
                                 this.checkNorthEast(y , x, useBoard) ||
                                 this.checkRight(y , x, useBoard) ||
                                 this.checkSouthEast(y , x, useBoard) ||
@@ -73,7 +62,7 @@ class Boggle {
                                 this.checkSouthwest(y, x, useBoard) ||
                                 this.checkLeft(y, x) ||
                                 this.checkNorthWest(y, x)
-                            )) {
+                            ) {
                                 obj.row = y
                                 obj.column = x
                                 obj.charPos = i
@@ -82,10 +71,7 @@ class Boggle {
                                 useBoard[y][x] = "temp"
                     
                                 this.charFound.push(obj)
-                              
-                                console.log(x, "LJ")
-                          
-                                console.log(this.charFound)
+        
                                 y = 0
                                 x = 0
 
@@ -125,11 +111,11 @@ class Boggle {
                 }
             }
 
-            console.log(useBoard)
-        
             if (this.charFound.length == this.searchWord[wordPos].length) {
               foundWords.push(this.searchWord[wordPos])
             }
+
+            this.charFound = []
 
             wordPos++
         }
@@ -237,5 +223,5 @@ class Boggle {
     }
 }
 
-const boggle = new Boggle(4,["TOROAZ","TOROAG","ASDASDAD","TRAOG"])
+const boggle = new Boggle(4,["TOROAZ","ROSAOA","TOROAG","ASDASDAD","TRAOG", "OAG"])
 boggle.solve()
