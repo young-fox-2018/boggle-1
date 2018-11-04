@@ -35,6 +35,7 @@ class Boggle {
         let wordFound = ['rtor']
         let charFound = []
         let obj = {}
+        let d = {}
 
         while (wordPos < wordFound.length) {
             for (let i = 0; i < this.searchWord[wordPos].length; i++) {
